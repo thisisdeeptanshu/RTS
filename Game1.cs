@@ -19,6 +19,13 @@ namespace RTS
         private Square[] squares;
         private RTS.Object[] objects;
 
+        private readonly int WIDTH = 1280;
+        private readonly int HEIGHT = 720;
+        private readonly float speed = 0.5f;
+
+        private int changeX;
+        private int changeY;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,8 +36,8 @@ namespace RTS
         protected override void Initialize()
         {
             // Seting the window size
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = WIDTH;
+            _graphics.PreferredBackBufferHeight = HEIGHT;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -67,6 +74,13 @@ namespace RTS
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            var keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) changeY++;
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) changeX++;
+            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) changeY--;
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) changeX--;
+
+
             base.Update(gameTime);
         }
 
@@ -80,8 +94,8 @@ namespace RTS
                 _spriteBatch.Draw(
                     square,
                     new Rectangle(
-                        squares[i].x,
-                        squares[i].y,
+                        (int) (squares[i].x * squares[i].w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
+                        (int) (squares[i].y * squares[i].h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
                         squares[i].w,
                         squares[i].h
                     ),

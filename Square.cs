@@ -14,11 +14,11 @@ namespace RTS
 
     public class Root
     {
-        public List<GameObjects> Squares { get; set; }
+        public List<Square> Squares { get; set; }
         public List<Object> Objects { get; set; }
     }
 
-    public class GameObjects
+    public class Square
     {
         public int x { get; set; }
         public int y { get; set; }
