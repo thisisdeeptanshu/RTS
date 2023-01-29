@@ -5,11 +5,24 @@ using System.Collections.Generic;
 
 namespace RTS
 {
+    public enum Type
+    {
+        Grass,
+        Sand,
+        Water,
+        Tree,
+        Chest,
+        Entity
+    }
+
     public class Object
     {
         public int x { get; set; }
         public int y { get; set; }
-        public string type { get; set; }
+        public int w = 300;
+        public int h = 300;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Type type { get; set; }
     }
 
     public class Root
@@ -22,24 +35,9 @@ namespace RTS
     {
         public int x { get; set; }
         public int y { get; set; }
-        public int w = 100;
-        public int h = 100;
+        public int w = 300;
+        public int h = 300;
         [JsonConverter(typeof(StringEnumConverter))]
         public Type type { get; set; }
-
-        public enum Type
-        {
-            Grass,
-            Sand,
-            Water
-        }
-
-        public Color GetColour()
-        {
-            if (this.type == Type.Grass) return Color.LightSeaGreen;
-            if (this.type == Type.Sand) return Color.LightGoldenrodYellow;
-            if (this.type == Type.Water) return Color.BlueViolet;
-            else return Color.White;
-        }
     }
 }

@@ -39,7 +39,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
                     saveToFile("map_data.json")
-                    print("map saved :)\nGo into the map_data.json file and replace '.0' file ''")
+                    print("map saved :)\nGo into the map_data.json file and replace '.0' with ''")
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1: # Left
                 pos = pygame.mouse.get_pos()
