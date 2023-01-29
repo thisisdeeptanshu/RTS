@@ -16,7 +16,7 @@ namespace RTS
 
         private Texture2D square;
 
-        private Square[] squares;
+        private GameObjects[] squares;
         private RTS.Object[] objects;
 
         public Game1()
