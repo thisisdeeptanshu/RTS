@@ -48,7 +48,7 @@ namespace RTS
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Getting all squares from json file
-            using (StreamReader r = new StreamReader(@"c:\users\deep\documents\projects\rts\data.json"))
+            using (StreamReader r = new StreamReader(@"c:\users\deep\documents\projects\rts\map_data.json"))
             {
                 string json = r.ReadToEnd();
                 var root = JsonConvert.DeserializeObject<Root>(json);
