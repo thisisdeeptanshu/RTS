@@ -12,7 +12,7 @@ namespace RTS
         Water,
         Tree,
         Chest,
-        Entity
+        Player
     }
 
     public class Object

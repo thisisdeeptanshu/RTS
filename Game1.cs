@@ -36,7 +36,7 @@ namespace RTS
         private Dictionary<Type, Texture2D> texturesMapping = new Dictionary<Type, Texture2D>();
         private Dictionary<Object, List<Type>> chestContents = new Dictionary<Object, List<Type>>();
 
-        private Entity e;
+        private Player player;
 
         public Game1()
         {
@@ -95,7 +95,7 @@ namespace RTS
             }
 
             // Initializing the bird
-            e = new Entity(5, 0, 300, 300);
+            player = new Player(5, 0, 300, 300);
         }
 
         protected override void UnloadContent()
@@ -155,13 +155,14 @@ namespace RTS
                     Color.White
                 );
             }
+            // Drawing the player
             _spriteBatch.Draw(
                 entityTexture,
                 new Rectangle(
-                    (int)(e.x * e.w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
-                    (int)(e.y * e.h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
-                    e.w,
-                    e.h
+                    (int)(player.x * player.w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
+                    (int)(player.y * player.h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
+                    player.w,
+                    player.h
                 ),
                 Color.White
             );

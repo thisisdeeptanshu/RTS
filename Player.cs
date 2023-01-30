@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace RTS
 {
-    class Entity
+    class Player
     {
         public int x, y, w, h;
         public int hunger, health, thirst;
         public List<Type> inventory;
 
-        public Entity(int x, int y, int w, int h)
+        public Player(int x, int y, int w, int h)
         {
             this.x = x;
             this.y = y;
@@ -20,7 +20,7 @@ namespace RTS
             this.h = h;
 
             this.hunger = 100;
-            this.thirst = 25;
+            this.thirst = 25; // Thirst is more important than hunger soooo ¯\_(ツ)_/¯
             this.health = 100;
 
             this.inventory = new List<Type>();
