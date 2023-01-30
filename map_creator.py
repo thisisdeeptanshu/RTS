@@ -101,9 +101,9 @@ while running:
                     allObjects.pop(toRemove)
 
             if temp == "Grass" or temp == "Sand" or temp == "Water":
-                allObjects.append({"x": pos[0], "y": pos[1], "type": types[typeIndex]})
-            else:
                 allBlocks.append({"x": pos[0], "y": pos[1], "type": types[typeIndex]})
+            else:
+                allObjects.append({"x": pos[0], "y": pos[1], "type": types[typeIndex]})
             print(f"Placed {types[typeIndex]} at {pos}")
         pos = 0
     

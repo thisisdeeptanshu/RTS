@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace RTS
 {
+
     public enum Type
     {
         Grass,
@@ -19,8 +20,8 @@ namespace RTS
     {
         public int x { get; set; }
         public int y { get; set; }
-        public int w = 300;
-        public int h = 300;
+        public int w = 200;
+        public int h = 200;
         [JsonConverter(typeof(StringEnumConverter))]
         public Type type { get; set; }
     }
@@ -35,8 +36,8 @@ namespace RTS
     {
         public int x { get; set; }
         public int y { get; set; }
-        public int w = 300;
-        public int h = 300;
+        public int w = 200;
+        public int h = 200;
         [JsonConverter(typeof(StringEnumConverter))]
         public Type type { get; set; }
     }

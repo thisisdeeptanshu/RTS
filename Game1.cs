@@ -21,7 +21,7 @@ namespace RTS
         private Texture2D sandTexture;
         private Texture2D waterTexture;
         private Texture2D chestTexture;
-        private Texture2D entityTexture;
+        private Texture2D playerTexture;
 
         private Square[] squares;
         private Object[] objects;
@@ -76,7 +76,7 @@ namespace RTS
             sandTexture = Content.Load<Texture2D>("Sand");
             waterTexture = Content.Load<Texture2D>("Water");
             chestTexture = Content.Load<Texture2D>("chest");
-            entityTexture = Content.Load<Texture2D>("entity");
+            playerTexture = Content.Load<Texture2D>("entity"); // Maybe consider changing the texture name to player
 
             // Setting the textures map
             texturesMapping.Add(Type.Tree, treeTexture);
@@ -84,18 +84,20 @@ namespace RTS
             texturesMapping.Add(Type.Sand, sandTexture);
             texturesMapping.Add(Type.Water, waterTexture);
             texturesMapping.Add(Type.Chest, chestTexture);
+            texturesMapping.Add(Type.Player, playerTexture);
 
-            // Creating chest collections
+            // Creating chest collections and getting the player
             for (int i = 0; i < objects.Length; i++)
             {
                 if (objects[i].type == Type.Chest)
                 {
                     chestContents.Add(objects[i], new List<Type>());
                 }
+                else if (objects[i].type == Type.Player)
+                {
+                    player = new Player(objects[i]);
+                }
             }
-
-            // Initializing the bird
-            player = new Player(5, 0, 300, 300);
         }
 
         protected override void UnloadContent()
@@ -113,10 +115,10 @@ namespace RTS
                 Exit();
 
             var keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) changeY++;
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) changeX++;
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) changeY--;
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) changeX--;
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) player.y++;
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) player.x++;
+            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) player.y--;
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) player.x--;
 
 
             base.Update(gameTime);
@@ -133,8 +135,8 @@ namespace RTS
                 _spriteBatch.Draw(
                     texturesMapping[squares[i].type],
                     new Rectangle(
-                        (int) (squares[i].x * squares[i].w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
-                        (int) (squares[i].y * squares[i].h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
+                        (int) ((squares[i].x - player.x) * squares[i].w + WIDTH / 2 - player.w / 2),
+                        (int) ((squares[i].y - player.y) * squares[i].h + HEIGHT / 2 - player.h / 2),
                         squares[i].w,
                         squares[i].h
                     ),
@@ -144,30 +146,24 @@ namespace RTS
             // Drawing all the objects
             for (int i = 0; i < objects.Length; i++)
             {
-                try
+                if (objects[i].type != Type.Player)
                 {
                     _spriteBatch.Draw(
                         texturesMapping[objects[i].type],
                         new Rectangle(
-                            (int)(objects[i].x * objects[i].w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
-                            (int)(objects[i].y * objects[i].h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
+                            (int)((objects[i].x - player.x) * objects[i].w + WIDTH / 2 - player.w / 2),
+                            (int)((objects[i].y - player.y) * objects[i].h + HEIGHT / 2 - player.h / 2),
                             objects[i].w,
                             objects[i].h
                         ),
                         Color.White
                     );
                 }
-                catch {}
             }
             // Drawing the player
             _spriteBatch.Draw(
-                entityTexture,
-                new Rectangle(
-                    (int)(player.x * player.w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
-                    (int)(player.y * player.h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
-                    player.w,
-                    player.h
-                ),
+                texturesMapping[Type.Player],
+                new Rectangle(WIDTH / 2 - player.w / 2, HEIGHT / 2 - player.h / 2, player.w, player.h),
                 Color.White
             );
             _spriteBatch.End();
