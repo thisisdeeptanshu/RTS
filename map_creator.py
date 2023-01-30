@@ -48,9 +48,9 @@ while running:
                 pos[0] -= changeX * speed
                 pos[1] -= changeY * speed
                 pos = [(i - i % size) / size for i in pos]
-                print(f"Block type changed to {types[typeIndex]}")
             elif event.button == 3: # Right
                 typeIndex = typeIndex + 1 if typeIndex < len(types) - 1 else 0
+                print(f"Block type changed to {types[typeIndex]}")
     win.fill((0, 0, 0))
 
     if pos != 0:
@@ -75,8 +75,7 @@ while running:
                     print(f"Removed block at {pos}.")
         else:
             temp = types[typeIndex]
-            if temp == "Grass" or temp == "Sand" or temp == "Water" or temp == "Player":
-                # Remove any previous objects
+            if temp == "Grass" or temp == "Sand" or temp == "Water": # Remove any previous objects
                 toRemove = None
                 for i in range(len(allObjects)):
                     if allObjects[i]["x"] == pos[0] and allObjects[i]["y"] == pos[1]:
@@ -92,8 +91,7 @@ while running:
                             break
                     if toRemove != None:
                         allBlocks.pop(toRemove)
-            else:
-                # Just remove the objects
+            else: # Just remove the objects
                 toRemove = None
                 for i in range(len(allObjects)):
                     if allObjects[i]["x"] == pos[0] and allObjects[i]["y"] == pos[1]:
@@ -102,7 +100,7 @@ while running:
                 if toRemove != None:
                     allObjects.pop(toRemove)
 
-            if temp == "Grass" or temp == "Sand" or temp == "Water" or temp == "Player":
+            if temp == "Grass" or temp == "Sand" or temp == "Water":
                 allObjects.append({"x": pos[0], "y": pos[1], "type": types[typeIndex]})
             else:
                 allBlocks.append({"x": pos[0], "y": pos[1], "type": types[typeIndex]})

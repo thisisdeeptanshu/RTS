@@ -144,16 +144,20 @@ namespace RTS
             // Drawing all the objects
             for (int i = 0; i < objects.Length; i++)
             {
-                _spriteBatch.Draw(
-                    texturesMapping[objects[i].type],
-                    new Rectangle(
-                        (int)(objects[i].x * objects[i].w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
-                        (int)(objects[i].y * objects[i].h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
-                        objects[i].w,
-                        objects[i].h
-                    ),
-                    Color.White
-                );
+                try
+                {
+                    _spriteBatch.Draw(
+                        texturesMapping[objects[i].type],
+                        new Rectangle(
+                            (int)(objects[i].x * objects[i].w + changeX * speed * gameTime.ElapsedGameTime.Milliseconds),
+                            (int)(objects[i].y * objects[i].h + changeY * speed * gameTime.ElapsedGameTime.Milliseconds),
+                            objects[i].w,
+                            objects[i].h
+                        ),
+                        Color.White
+                    );
+                }
+                catch {}
             }
             // Drawing the player
             _spriteBatch.Draw(
