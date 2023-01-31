@@ -2,11 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection.Metadata;
+using System.Linq;
 
 namespace RTS
 {
@@ -28,13 +26,21 @@ namespace RTS
 
         private readonly int WIDTH = 1280;
         private readonly int HEIGHT = 720;
+        
         private readonly float speed = 0.5f;
+        private readonly int timeDefault = 240;
 
         private int changeX;
         private int changeY;
+        
+        private float time;
+
+        Keys prevKey;
 
         private Dictionary<Type, Texture2D> texturesMapping = new Dictionary<Type, Texture2D>();
         private Dictionary<Object, List<Type>> chestContents = new Dictionary<Object, List<Type>>();
+
+        private List<Type> collidableItems;
 
         private Player player;
 
@@ -51,8 +57,9 @@ namespace RTS
             _graphics.PreferredBackBufferWidth = WIDTH;
             _graphics.PreferredBackBufferHeight = HEIGHT;
             _graphics.ApplyChanges();
-
             base.Initialize();
+
+            time = timeDefault;
         }
 
         protected override void LoadContent()
@@ -76,7 +83,7 @@ namespace RTS
             sandTexture = Content.Load<Texture2D>("Sand");
             waterTexture = Content.Load<Texture2D>("Water");
             chestTexture = Content.Load<Texture2D>("chest");
-            playerTexture = Content.Load<Texture2D>("entity"); // Maybe consider changing the texture name to player
+            playerTexture = Content.Load<Texture2D>("player");
 
             // Setting the textures map
             texturesMapping.Add(Type.Tree, treeTexture);
@@ -86,16 +93,24 @@ namespace RTS
             texturesMapping.Add(Type.Chest, chestTexture);
             texturesMapping.Add(Type.Player, playerTexture);
 
-            // Creating chest collections and getting the player
+            // Adding collidable items
+            Type[] temp = new[] { Type.Chest, Type.Tree, Type.Water };
+            collidableItems = temp.ToList();
+
             for (int i = 0; i < objects.Length; i++)
             {
                 if (objects[i].type == Type.Chest)
                 {
+                    // Creating chest collections
                     chestContents.Add(objects[i], new List<Type>());
                 }
                 else if (objects[i].type == Type.Player)
                 {
                     player = new Player(objects[i]);
+                }
+                else if (objects[i].type == Type.Tree)
+                {
+                    objects[i].h = 150;
                 }
             }
         }
@@ -115,11 +130,52 @@ namespace RTS
                 Exit();
 
             var keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) player.y++;
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) player.x++;
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) player.y--;
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) player.x--;
+            if (keyboardState.IsKeyUp(prevKey)) { time = -1f; prevKey = Keys.None; }
+            
+            time -= 1 * gameTime.ElapsedGameTime.Milliseconds;
 
+            if (time <= 0)
+            {
+                int[] originalPos = new []{ player.x, player.y };
+                if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) { player.y--; prevKey = Keys.W; }
+                if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)) { player.x--; prevKey = Keys.A; }
+                if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)) { player.y++; prevKey = Keys.S; }
+                if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)) { player.x++; prevKey = Keys.D; }
+
+                // Collision Detection
+                bool standingOnBlock = false;
+                for (int i = 0; i < squares.Length; i++)
+                {
+                    if (squares[i].x == player.x && squares[i].y == player.y)
+                    {
+                        standingOnBlock = true;
+                        if (collidableItems.Contains(squares[i].type))
+                        {
+                            player.x = originalPos[0];
+                            player.y = originalPos[1];
+                        }
+                    }
+                }
+                for (int i = 0; i < objects.Length; i++)
+                {
+                    if (objects[i].x == player.x && objects[i].y == player.y)
+                    {
+                        standingOnBlock = true;
+                        if (collidableItems.Contains(objects[i].type))
+                        {
+                            player.x = originalPos[0];
+                            player.y = originalPos[1];
+                        }
+                    }
+                }
+                if (!standingOnBlock)
+                {
+                    player.x = originalPos[0];
+                    player.y = originalPos[1];
+                }
+
+                time = timeDefault;
+            }
 
             base.Update(gameTime);
         }
@@ -151,8 +207,8 @@ namespace RTS
                     _spriteBatch.Draw(
                         texturesMapping[objects[i].type],
                         new Rectangle(
-                            (int)((objects[i].x - player.x) * objects[i].w + WIDTH / 2 - player.w / 2),
-                            (int)((objects[i].y - player.y) * objects[i].h + HEIGHT / 2 - player.h / 2),
+                            (int)((objects[i].x - player.x) * 100 + WIDTH / 2 - player.w / 2 - objects[i].w + 100),
+                            (int)((objects[i].y - player.y) * 100 + HEIGHT / 2 - player.h / 2 - objects[i].h + 100),
                             objects[i].w,
                             objects[i].h
                         ),

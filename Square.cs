@@ -20,8 +20,8 @@ namespace RTS
     {
         public int x { get; set; }
         public int y { get; set; }
-        public int w = 200;
-        public int h = 200;
+        public int w = 100;
+        public int h = 100;
         [JsonConverter(typeof(StringEnumConverter))]
         public Type type { get; set; }
     }
@@ -36,8 +36,8 @@ namespace RTS
     {
         public int x { get; set; }
         public int y { get; set; }
-        public int w = 200;
-        public int h = 200;
+        public int w = 100;
+        public int h = 100;
         [JsonConverter(typeof(StringEnumConverter))]
         public Type type { get; set; }
     }

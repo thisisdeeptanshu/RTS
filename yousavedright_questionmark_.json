@@ -1,1 +1,0 @@
-{"Squares": [{"x": 7.0, "y": 4.0, "type": "Grass"}, {"x": 6.0, "y": 4.0, "type": "Grass"}, {"x": 6.0, "y": 3.0, "type": "Grass"}, {"x": 6.0, "y": 2.0, "type": "Grass"}, {"x": 7.0, "y": 3.0, "type": "Sand"}, {"x": 7.0, "y": 2.0, "type": "Water"}], "Objects": [{"x": 6.0, "y": 2.0, "type": "Tree"}, {"x": 6.0, "y": 3.0, "type": "Chest"}, {"x": 6.0, "y": 4.0, "type": "Player"}]}
